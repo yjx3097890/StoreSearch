@@ -14,6 +14,8 @@
 		0975CAAC26A49D4D001D38D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0975CAAB26A49D4D001D38D6 /* Assets.xcassets */; };
 		0975CAAF26A49D4D001D38D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0975CAAD26A49D4D001D38D6 /* LaunchScreen.storyboard */; };
 		0975CAB726A5C025001D38D6 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0975CAB626A5C025001D38D6 /* SearchResult.swift */; };
+		097F000026A6A4A9001A48E7 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097FFFFF26A6A4A9001A48E7 /* SearchResultCell.swift */; };
+		097FFFFE26A66A98001A48E7 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 097FFFFD26A66A98001A48E7 /* SearchResultCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		0975CAAE26A49D4D001D38D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0975CAB026A49D4D001D38D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0975CAB626A5C025001D38D6 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		097FFFFD26A66A98001A48E7 /* SearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
+		097FFFFF26A6A4A9001A48E7 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,8 @@
 				0975CAAD26A49D4D001D38D6 /* LaunchScreen.storyboard */,
 				0975CAB026A49D4D001D38D6 /* Info.plist */,
 				0975CAB626A5C025001D38D6 /* SearchResult.swift */,
+				097FFFFD26A66A98001A48E7 /* SearchResultCell.xib */,
+				097FFFFF26A6A4A9001A48E7 /* SearchResultCell.swift */,
 			);
 			path = StoreSearch;
 			sourceTree = "<group>";
@@ -129,6 +135,7 @@
 			files = (
 				0975CAAF26A49D4D001D38D6 /* LaunchScreen.storyboard in Resources */,
 				0975CAAC26A49D4D001D38D6 /* Assets.xcassets in Resources */,
+				097FFFFE26A66A98001A48E7 /* SearchResultCell.xib in Resources */,
 				0975CAAA26A49D4B001D38D6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,6 +151,7 @@
 				0975CAA326A49D4B001D38D6 /* AppDelegate.swift in Sources */,
 				0975CAB726A5C025001D38D6 /* SearchResult.swift in Sources */,
 				0975CAA526A49D4B001D38D6 /* SceneDelegate.swift in Sources */,
+				097F000026A6A4A9001A48E7 /* SearchResultCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
