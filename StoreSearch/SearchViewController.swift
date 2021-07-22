@@ -100,10 +100,11 @@ extension SearchViewController: UISearchBarDelegate {
         let url = iTurnsURL(searchText: searchBar.text!)
         print("URL: '\(url)'")
         if let data = performStoreRequest(with: url) {
-            let results = parse(data: data)
-            
-            
-            print("Received JSON data '\(results)'")
+            searchResults = parse(data: data)
+            searchResults.sort {
+                $0 < $1
+                
+            }
         }
         
         
@@ -135,7 +136,12 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: TableView.CellIdentifiers.searchResultCell, for: indexPath) as! SearchResultCell
             let searchResult = searchResults[indexPath.row]
             cell.nameLable.text = searchResult.name
-            cell.artistNameLable.text = searchResult.artistName
+            
+            if searchResult.artist.isEmpty {
+                cell.artistNameLable.text = "Unknown"
+            } else {
+                cell.artistNameLable.text = "\(searchResult.artist) (\(searchResult.type))"
+            }
            return cell
         }
         
