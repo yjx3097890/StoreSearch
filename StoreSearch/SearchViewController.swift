@@ -13,7 +13,6 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     
-    
     var hasSearched = false
     
     struct TableView {
@@ -37,7 +36,23 @@ class SearchViewController: UIViewController {
         
         searchBar.becomeFirstResponder()
     }
+    
+    // MARK: - Helper Methods
+    func iTurnsURL(searchText: String) -> URL {
+        let encodedText = searchText.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        let urlString = String(format: "https://itunes.apple.com/search?term=%@", encodedText)
+        let url = URL(string: urlString)
+        return url!
+    }
 
+    func performStoreRequest(with url: URL) -> String? {
+        do {
+            return try String(contentsOf: url, encoding: .utf8)
+        } catch {
+            print("Download Error: '\(error.localizedDescription)'")
+        }
+        return nil
+    }
 
 }
 
@@ -45,21 +60,28 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
+        if searchBar.text!.isEmpty {
+            return
+        }
+        
         searchResults = []
-        if ( searchBar.text != "j") {
-        for i in stride(from: 0, through: 2, by: 1) {
-            let searchResult = SearchResult()
-            searchResult.name = String(format: "Faake Result %d for '%@'", i, searchBar.text!)
-            searchResult.artistName = searchBar.text!
-            searchResults.append(searchResult)
-        }
-        }
         hasSearched = true
         searchBar.resignFirstResponder()
+        
+        let url = iTurnsURL(searchText: searchBar.text!)
+        print("URL: '\(url)'")
+        if let jsonString = performStoreRequest(with: url) {
+            print("Received JSON string '\(jsonString)'")
+        }
+        
+        
         tableView.reloadData()
+        
+       
     }
     
     func position(for bar: UIBarPositioning) -> UIBarPosition {
+        // 和状态栏成为一体
         return .topAttached
     }
 }
