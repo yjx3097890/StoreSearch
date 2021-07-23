@@ -99,28 +99,27 @@ extension SearchViewController: UISearchBarDelegate {
         if searchBar.text!.isEmpty {
             return
         }
-        
-        searchResults = []
-        hasSearched = true
         searchBar.resignFirstResponder()
+        hasSearched = true
+        searchResults = []
+        
+        let queue = DispatchQueue.global()
+        let url = iTurnsURL(searchText: searchBar.text!)
         
         isLoading = true
         tableView.reloadData()
-//        
-//        let url = iTurnsURL(searchText: searchBar.text!)
-//        print("URL: '\(url)'")
-//        if let data = performStoreRequest(with: url) {
-//            searchResults = parse(data: data)
-//            searchResults.sort {
-//                $0 < $1
-//                
-//            }
-//        }
-//        
-//        isLoading = false
-//        tableView.reloadData()
         
-       
+        queue.async {
+            if let data = self.performStoreRequest(with: url) {
+                self.searchResults = self.parse(data: data)
+                self.searchResults.sort(by: <)
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        
     }
     
     func position(for bar: UIBarPositioning) -> UIBarPosition {
