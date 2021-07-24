@@ -59,18 +59,17 @@ class SearchViewController: UIViewController {
 //        return nil
 //    }
     
-    func performStoreRequest(with url: URL) -> Data? {
-        do {
-            let data = try Data(contentsOf: url)
-             return data
-        } catch {
-            print("Download Error: '\(error.localizedDescription)'")
-            isLoading = false
-            showNetworkError()
-            return nil
-        }
-        
-    }
+//    func performStoreRequest(with url: URL) -> Data? {
+//        do {
+//            let data = try Data(contentsOf: url)
+//             return data
+//        } catch {
+//            print("Download Error: '\(error.localizedDescription)'")
+//            isLoading = false
+//            showNetworkError()
+//            return nil
+//        }
+//    }
 
     func parse(data: Data) -> [SearchResult] {
         do {
@@ -102,23 +101,42 @@ extension SearchViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         hasSearched = true
         searchResults = []
-        
-        let queue = DispatchQueue.global()
-        let url = iTurnsURL(searchText: searchBar.text!)
-        
         isLoading = true
         tableView.reloadData()
+
         
-        queue.async {
-            if let data = self.performStoreRequest(with: url) {
-                self.searchResults = self.parse(data: data)
-                self.searchResults.sort(by: <)
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    self.tableView.reloadData()
+        let url = iTurnsURL(searchText: searchBar.text!)
+        
+        let session = URLSession.shared
+        
+        let dataTask = session.dataTask(with: url) { [self]
+            data, response, error in
+            print("On main thread? " + (Thread.current.isMainThread ? "Yes" : "No"))
+            if let error = error {
+                print("Failure! \(error.localizedDescription)")
+            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                if let data = data {
+                    searchResults = parse(data: data)
+                    searchResults.sort(by: <)
+                    DispatchQueue.main.async {
+                        isLoading = false
+                        tableView.reloadData()
+                    }
+                    return
                 }
+            } else {
+                print("Failure! \(response!)")
+            }
+            DispatchQueue.main.async {
+                hasSearched = false
+                isLoading = false
+                tableView.reloadData()
+                showNetworkError()
             }
         }
+        
+        dataTask.resume()
+        
         
     }
     
