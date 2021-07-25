@@ -17,6 +17,7 @@
 		097F000326AA9E87001A48E7 /* LoadingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F000126AA9E87001A48E7 /* LoadingViewCell.swift */; };
 		097F000426AA9E87001A48E7 /* LoadingViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 097F000226AA9E87001A48E7 /* LoadingViewCell.xib */; };
 		097FFFFE26A66A98001A48E7 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 097FFFFD26A66A98001A48E7 /* SearchResultCell.xib */; };
+		09944DE826AD650E00FF3B4D /* UIImageView+DownloadImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09944DE726AD650E00FF3B4D /* UIImageView+DownloadImage.swift */; };
 		09C1397526A6FD39008B8721 /* NothingFoundCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09C1397426A6FD39008B8721 /* NothingFoundCell.xib */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		097F000226AA9E87001A48E7 /* LoadingViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingViewCell.xib; sourceTree = "<group>"; };
 		097FFFFD26A66A98001A48E7 /* SearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
 		097FFFFF26A6A4A9001A48E7 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		09944DE726AD650E00FF3B4D /* UIImageView+DownloadImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+DownloadImage.swift"; sourceTree = "<group>"; };
 		09C1397426A6FD39008B8721 /* NothingFoundCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NothingFoundCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,6 +80,7 @@
 				09C1397426A6FD39008B8721 /* NothingFoundCell.xib */,
 				097F000126AA9E87001A48E7 /* LoadingViewCell.swift */,
 				097F000226AA9E87001A48E7 /* LoadingViewCell.xib */,
+				09944DE726AD650E00FF3B4D /* UIImageView+DownloadImage.swift */,
 			);
 			path = StoreSearch;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09944DE826AD650E00FF3B4D /* UIImageView+DownloadImage.swift in Sources */,
 				0975CAA726A49D4B001D38D6 /* SearchViewController.swift in Sources */,
 				0975CAA326A49D4B001D38D6 /* AppDelegate.swift in Sources */,
 				0975CAB726A5C025001D38D6 /* SearchResult.swift in Sources */,
