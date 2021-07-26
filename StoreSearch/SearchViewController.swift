@@ -156,6 +156,16 @@ class SearchViewController: UIViewController {
         
         
     }
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+        if segue.identifier == "ShowDetail" {
+            let controller = segue.destination as! DetailViewController
+            let result = searchResults[(sender as! IndexPath).row]
+            controller.result = result
+        }
+    }
   
 }
 
