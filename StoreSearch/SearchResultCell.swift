@@ -22,6 +22,8 @@ class SearchResultCell: UITableViewCell {
         selectedView.backgroundColor = UIColor(named: "SearchBar")?.withAlphaComponent(0.5)
         selectedBackgroundView = selectedView
         
+        nameLable.adjustsFontForContentSizeCategory = true
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
