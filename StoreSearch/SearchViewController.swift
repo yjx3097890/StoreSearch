@@ -13,6 +13,7 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
+    var landscapeVC: LandscapeViewController?
     
     var hasSearched = false
     var isLoading = false
@@ -48,6 +49,21 @@ class SearchViewController: UIViewController {
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         
         performSearch()
+    }
+    
+    // trait collection for the view controller changes
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+        super.willTransition(to: newCollection, with: coordinator)
+        switch newCollection.verticalSizeClass {
+        case .compact:
+            showLandscape(with: coordinator)
+        case .regular, .unspecified:
+            hideLandscape(with: coordinator)
+        @unknown default:
+            break
+        }
+        
     }
     
     // MARK: - Helper Methods
@@ -155,6 +171,30 @@ class SearchViewController: UIViewController {
         dataTask?.resume()
         
         
+    }
+    
+    func showLandscape(with coordinator: UIViewControllerTransitionCoordinator) {
+        guard landscapeVC == nil else {
+            return
+        }
+        
+        landscapeVC = storyboard?.instantiateViewController(identifier: "LandscapeViewController") as? LandscapeViewController
+        if let controller = landscapeVC {
+            controller.view.frame = view.bounds
+            // view controller containment
+            view.addSubview(controller.view)
+            addChild(controller)
+            controller.didMove(toParent: self)
+        }
+    }
+    
+    func hideLandscape(with coordinator: UIViewControllerTransitionCoordinator) {
+        if let controller = landscapeVC {
+            controller.willMove(toParent: nil)
+            controller.view.removeFromSuperview()
+            controller.removeFromParent()
+            landscapeVC = nil
+        }
     }
     
     // MARK: - Navigation
