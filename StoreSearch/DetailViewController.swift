@@ -50,6 +50,16 @@ class DetailViewController: UIViewController {
         downloadTask = nil
         print("disappear")
     }
+//    
+//    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+//        super.willTransition(to: newCollection, with: coordinator)
+//        switch newCollection.verticalSizeClass {
+//            case .compact, .regular, .unspecified:
+//                dismiss(animated: true, completion: nil)
+//            default:
+//                break
+//        }
+//    }
     
     // MARK: - Actions
     @objc @IBAction func close() {
