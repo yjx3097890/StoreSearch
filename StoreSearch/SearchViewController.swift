@@ -19,6 +19,8 @@ class SearchViewController: UIViewController {
     var isLoading = false
     var dataTask: URLSessionDataTask?
     
+   
+    
     
     struct TableView {
         struct CellIdentifiers {

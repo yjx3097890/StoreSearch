@@ -20,6 +20,14 @@ class DetailViewController: UIViewController {
     var downloadTask: URLSessionDownloadTask?
     var result: SearchResult!
     
+    enum AnimationStyle {
+        case slide
+        case fade
+    }
+    
+    var dismissStyle = AnimationStyle.fade
+    
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         transitioningDelegate = self
@@ -63,6 +71,7 @@ class DetailViewController: UIViewController {
     
     // MARK: - Actions
     @objc @IBAction func close() {
+        dismissStyle = .slide
         dismiss(animated: true, completion: nil)
     }
 
@@ -129,6 +138,6 @@ extension DetailViewController: UIViewControllerTransitioningDelegate {
   }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-      return SlideOutAnimationController()
+        return dismissStyle == .slide ? SlideOutAnimationController(): FadeOutAnimationController()
     }
 }
