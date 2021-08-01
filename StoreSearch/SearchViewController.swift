@@ -183,6 +183,9 @@ class SearchViewController: UIViewController {
         
         landscapeVC = storyboard?.instantiateViewController(identifier: "LandscapeViewController") as? LandscapeViewController
         if let controller = landscapeVC {
+            // You have to be sure to set searchResults before you access the view property which will trigger calling viewDidLoad()
+            controller.searchResults = searchResults
+
             controller.view.frame = view.bounds
             controller.view.alpha = 0
             // view controller containment
