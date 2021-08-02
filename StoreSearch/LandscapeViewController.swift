@@ -15,6 +15,7 @@ class LandscapeViewController: UIViewController {
     private var firstTime = true
     var search: Search!
     private var downloadTasks = [URLSessionDownloadTask]()
+    private var spinner: UIActivityIndicatorView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +53,17 @@ class LandscapeViewController: UIViewController {
         
         if firstTime {
           firstTime = false
-            tileButtons(search.searchResults)
+            switch search.state {
+            case .results(let results):
+                tileButtons(results)
+            case .loading:
+                showSpinner()
+            case .noResults:
+                showNothingFoundLabel()
+            default:
+                break
+            }
+            
         }
     }
     
@@ -145,6 +156,48 @@ class LandscapeViewController: UIViewController {
             }
             self.downloadTasks.append(task)
             task.resume()
+        }
+    }
+    
+    private func showSpinner() {
+        spinner = UIActivityIndicatorView(style: .large)
+        spinner!.center = CGPoint(x: scrollView.frame.midX + 0.5, y: scrollView.frame.midY + 0.5)
+       // print(scrollView.frame)
+       // print(scrollView.bounds)
+        spinner!.tag = 1000
+        view.addSubview(spinner!)
+        spinner!.startAnimating()
+    }
+    
+    private func showNothingFoundLabel() {
+      let label = UILabel(frame: CGRect.zero)
+      label.text = "Nothing Found"
+      label.textColor = UIColor.label
+      label.backgroundColor = UIColor.clear
+      
+      label.sizeToFit()
+      
+//      var rect = label.frame
+//      rect.size.width = ceil(rect.size.width / 2) * 2    // make even why?
+//      rect.size.height = ceil(rect.size.height / 2) * 2  // make even
+//      label.frame = rect
+      
+      label.center = CGPoint(
+        x: scrollView.bounds.midX,
+        y: scrollView.bounds.midY)
+      view.addSubview(label)
+    }
+    
+    func searchResultsReceived() {
+        spinner?.removeFromSuperview()
+        
+        switch search.state {
+        case .results(let results):
+            tileButtons(results)
+        case .noResults:
+            showNothingFoundLabel()
+        default:
+            break
         }
     }
 

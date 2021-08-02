@@ -10,9 +10,14 @@ import Foundation
 typealias SearchComplete = (Bool) -> Void
 
 class Search {
-    var searchResults = [SearchResult]()
-    var hasSearched = false
-    var isLoading = false
+    private(set) var state: State = .notSearchYet
+    
+    enum State {
+        case notSearchYet
+        case loading
+        case noResults
+        case results([SearchResult])
+    }
     
     enum Category: Int {
         case all
@@ -83,9 +88,7 @@ class Search {
             return
         }
         dataTask?.cancel()
-        hasSearched = true
-        searchResults = []
-        isLoading = true
+        state = .loading
         
         let url = iTurnsURL(searchText: text, category: category)
         
@@ -93,6 +96,8 @@ class Search {
         
         dataTask = session.dataTask(with: url) { [self] data, response, error in
           //  print("On main thread? " + (Thread.current.isMainThread ? "Yes" : "No"))
+            var newState = State.notSearchYet
+
             var success = false
             
             if let error = error as NSError?, error.code == -999 {
@@ -101,27 +106,25 @@ class Search {
             }
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                 if let data = data {
-                    searchResults = parse(data: data)
-                    searchResults.sort(by: <)
-                    isLoading = false
+                    var searchResults = parse(data: data)
+                    if searchResults.isEmpty {
+                        newState = .noResults
+                    } else {
+                        searchResults.sort(by: <)
+                        newState = .results(searchResults)
+                    }
                     success = true
                 }
             }
-            if !success {
-                print("Failure! \(response!)")
-                
-                hasSearched = false
-                isLoading = false
-            }
             
             DispatchQueue.main.async {
+                self.state = newState
                 completion(success)
             }
             
         }
         
         dataTask?.resume()
-        
         
     }
    
