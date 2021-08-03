@@ -67,6 +67,10 @@ class LandscapeViewController: UIViewController {
         }
     }
     
+    @objc func buttonPressed(_ sender: UIButton) {
+        performSegue(withIdentifier: "ShowDetail", sender: sender)
+    }
+    
     // MARK: - Actions
     @IBAction func pageChanged(_ sender: UIPageControl) {
         UIView.animate(withDuration: 0.3) {
@@ -110,8 +114,9 @@ class LandscapeViewController: UIViewController {
           // 1
           let button = UIButton(type: .system)
             button.backgroundColor = UIColor.init(patternImage: UIImage(named: "LandscapeButton")!)
-          button.setTitle("\(index)", for: .normal)
             downloadImage(for: result, placeOn: button)
+            button.tag = 2000+index
+            button.addTarget(self, action: #selector(buttonPressed(_:)), for: .touchUpInside)
           // 2
           button.frame = CGRect(
             x: x + paddingHorz,
@@ -201,15 +206,19 @@ class LandscapeViewController: UIViewController {
         }
     }
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "ShowDetail" {
+            if case let .results(results) = search.state {
+                let controller = segue.destination as! DetailViewController
+                controller.result = results[(sender as! UIButton).tag - 2000]
+            }
+           
+        }
     }
-    */
+    
 
 }
 
