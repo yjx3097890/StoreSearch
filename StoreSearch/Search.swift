@@ -42,10 +42,15 @@ class Search {
     private var dataTask: URLSessionDataTask?
     
     private func iTurnsURL(searchText: String, category: Category) -> URL {
+        let locale = Locale.autoupdatingCurrent
+        let language = locale.languageCode ?? "en"
+        let countryCode = locale.regionCode ?? "US"
+        
         let kind = category.type
         let encodedText = searchText.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        let urlString = String(format: "https://itunes.apple.com/search?term=%@&limit=200&entity=%@", encodedText, kind)
+        let urlString = String(format: "https://itunes.apple.com/search?term=%@&limit=200&entity=%@&lang=%@&country=%@", encodedText, kind, language, countryCode)
         let url = URL(string: urlString)
+        print("URL: \(url!)")
         return url!
     }
 

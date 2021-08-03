@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  StoreSearch
+
+  Created by yan jixian on 2021/8/4.
+  app 中文名字
+*/
+
+CFBundleDisplayName = "探索商店";
