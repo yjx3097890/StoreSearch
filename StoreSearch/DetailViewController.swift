@@ -18,7 +18,15 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var priceButton: UIButton!
     
     var downloadTask: URLSessionDownloadTask?
-    var result: SearchResult!
+    var result: SearchResult? {
+        didSet {
+            if isViewLoaded {
+                // iphone 的isViewLoaded 可能为 false
+                setValues()
+            }
+        }
+    }
+    var isPopUp = false
     
     enum AnimationStyle {
         case slide
@@ -36,21 +44,32 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if isPopUp {
+            
+            // 添加圆角
+            popUpView.layer.cornerRadius = 10
+            
+            // 点击背景消失当前页面
+            let gestureRecongnizer = UITapGestureRecognizer(target: self, action: #selector(close))
+            gestureRecongnizer.cancelsTouchesInView = true // 如果这个手势触发了，是否取消别的手势事件
+            gestureRecongnizer.delegate = self
+            view.addGestureRecognizer(gestureRecongnizer)
+            // Gradient view
+            view.backgroundColor = .clear
+            let dimmingView = GradientView(frame: view.bounds)
+            view.insertSubview(dimmingView, at: 0)
+        } else {
+            view.backgroundColor = UIColor(patternImage: UIImage(named: "LandscapeBackground")!)
+            popUpView.isHidden = true
+            if let displayName = Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String {
+                title = displayName
+            }
+        }
+        
+        if result != nil {
+            setValues()
 
-        // 添加圆角
-        popUpView.layer.cornerRadius = 10
-        
-        // 点击背景消失当前页面
-        let gestureRecongnizer = UITapGestureRecognizer(target: self, action: #selector(close))
-        gestureRecongnizer.cancelsTouchesInView = true // 如果这个手势触发了，是否取消别的手势事件
-        gestureRecongnizer.delegate = self
-        view.addGestureRecognizer(gestureRecongnizer)
-        
-        view.backgroundColor = .clear
-        let dimmingView = GradientView(frame: view.bounds)
-        view.insertSubview(dimmingView, at: 0)
-        
-        setValues()
+        }
     }
     
     deinit {
@@ -76,40 +95,42 @@ class DetailViewController: UIViewController {
     }
 
     @IBAction func linkToAppStore(_ sender: Any) {
-        if let url = URL(string: result.storeURL) {
+        if let r = result, let url = URL(string: r.storeURL) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
           }
     }
     
     // MARK: - Helper Methods
     func setValues() {
-        if let url = URL(string: result.imageLarge) {
+        if let r = result, let url = URL(string: r.imageLarge) {
             downloadTask = artworkImageView.loadImage(url: url)
         }
         
-        nameLabel.text = result.name
-        typeLabel.text = result.type
-        if result.artist.isEmpty {
+        nameLabel.text = result?.name
+        typeLabel.text = result?.type
+        if let r = result, r.artist.isEmpty {
             artistNameLabel.text = NSLocalizedString("Unknown", comment: "Unknown artist")
           } else {
-            artistNameLabel.text = result.artist
+            artistNameLabel.text = result?.artist
           }
-        genreLabel.text = result.genre
+        genreLabel.text = result?.genre
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = result.currency
+        formatter.currencyCode = result?.currency
         
         let priceText: String
-        if result.price == 0 {
+        if let r = result, r.price == 0 {
           priceText = NSLocalizedString("Free", comment: "price 0")
-        } else if let text = formatter.string(from: result.price as NSNumber) {
+        } else if let r = result, let text = formatter.string(from: r.price as NSNumber) {
           priceText = text
         } else {
           priceText = ""
         }
         
         priceButton.setTitle( priceText, for: .normal)
+        
+        popUpView.isHidden = false
     }
     
     /*

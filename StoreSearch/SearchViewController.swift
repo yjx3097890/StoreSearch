@@ -13,6 +13,7 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
+    weak var detailVCForSplit: DetailViewController?
     var landscapeVC: LandscapeViewController?
     private let search = Search()
     
@@ -36,8 +37,11 @@ class SearchViewController: UIViewController {
         let loadingCellNib = UINib(nibName: TableView.CellIdentifiers.loadingViewCell, bundle: nil)
         tableView.register(loadingCellNib, forCellReuseIdentifier: TableView.CellIdentifiers.loadingViewCell)
     
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            searchBar.becomeFirstResponder()
+        }
         
-        searchBar.becomeFirstResponder()
+        title = NSLocalizedString("Search", comment: "split view primary button")
     }
     
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
@@ -131,6 +135,15 @@ class SearchViewController: UIViewController {
         }
     }
     
+    private func hidePrimaryPane() {
+        UIView.animate(withDuration: 0.25, animations: {
+            self.splitViewController?.preferredDisplayMode = .secondaryOnly
+        }) { _ in
+            // Otherwise, the primary pane stays hidden even in landscape!
+            self.splitViewController?.preferredDisplayMode = .automatic
+        }
+    }
+    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
@@ -197,9 +210,21 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        searchBar.resignFirstResponder()
         
-        performSegue(withIdentifier: "ShowDetail", sender: indexPath)
+        if view.window!.rootViewController?.traitCollection.horizontalSizeClass == .compact {
+            tableView.deselectRow(at: indexPath, animated: true)
+            performSegue(withIdentifier: "ShowDetail", sender: indexPath)
+        } else {
+            if case let .results(results) = search.state {
+                detailVCForSplit?.result = results[indexPath.row]
+            }
+            if splitViewController!.displayMode != .oneBesideSecondary {
+                hidePrimaryPane()
+            }
+        }
+        
+      
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
