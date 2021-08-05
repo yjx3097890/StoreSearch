@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         searchVC.detailVCForSplit = detailVC
         splitVC.delegate = self
         if UIDevice.current.userInterfaceIdiom == .phone {
+            // same as .oneOverlaySecondary!!!
             splitVC.preferredDisplayMode = .oneBesideSecondary
         }
     }
