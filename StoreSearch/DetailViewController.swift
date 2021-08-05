@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MessageUI
 
 class DetailViewController: UIViewController {
 
@@ -64,6 +65,9 @@ class DetailViewController: UIViewController {
             if let displayName = Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String {
                 title = displayName
             }
+            
+            // popover action button
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(showPopover))
         }
         
         if result != nil {
@@ -92,6 +96,19 @@ class DetailViewController: UIViewController {
     @objc @IBAction func close() {
         dismissStyle = .slide
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func showPopover(_ sender: UIBarButtonItem) {
+      guard let popover = storyboard?.instantiateViewController(
+        withIdentifier: "PopoverView") as? MenuViewController else { return }
+        // configure presentation style
+      popover.modalPresentationStyle = .popover
+      if let ppc = popover.popoverPresentationController {
+        // “from which to display the popover ”
+        ppc.barButtonItem = sender
+      }
+        popover.delegate = self
+      present(popover, animated: true, completion: nil)
     }
 
     @IBAction func linkToAppStore(_ sender: Any) {
@@ -148,7 +165,8 @@ class DetailViewController: UIViewController {
 
 extension DetailViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return (touch.view === self.view)
+        
+        return (touch.view?.superview === self.view)
     }
 }
 
@@ -161,4 +179,30 @@ extension DetailViewController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return dismissStyle == .slide ? SlideOutAnimationController(): FadeOutAnimationController()
     }
+}
+
+extension DetailViewController: MenuViewControllerDelegate {
+    func menuViewControllerSendEmail(_: MenuViewController) {
+       
+        dismiss(animated: true) {
+          if MFMailComposeViewController.canSendMail() {
+            let controller = MFMailComposeViewController()
+            controller.setSubject(
+              NSLocalizedString("Support Request", comment: "Email subject"))
+            controller.setToRecipients(["315644588@qq.com"])
+            controller.mailComposeDelegate = self
+            self.present(controller, animated: true, completion: nil)
+          }
+        }
+     }
+}
+
+extension DetailViewController: MFMailComposeViewControllerDelegate {
+  func mailComposeController(
+    _ controller: MFMailComposeViewController,
+    didFinishWith result: MFMailComposeResult,
+    error: Error?
+  ) {
+    dismiss(animated: true, completion: nil)
+  }
 }

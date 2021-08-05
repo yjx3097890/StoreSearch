@@ -44,6 +44,13 @@ class SearchViewController: UIViewController {
         title = NSLocalizedString("Search", comment: "split view primary button")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+      super.viewWillAppear(animated)
+      if UIDevice.current.userInterfaceIdiom == .phone {
+        navigationController?.navigationBar.isHidden = true
+      }
+    }
+    
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         
         performSearch()
@@ -55,7 +62,9 @@ class SearchViewController: UIViewController {
         super.willTransition(to: newCollection, with: coordinator)
         switch newCollection.verticalSizeClass {
         case .compact:
-            showLandscape(with: coordinator)
+            if newCollection.horizontalSizeClass == .compact {
+                showLandscape(with: coordinator)
+            }
         case .regular, .unspecified:
             hideLandscape(with: coordinator)
         @unknown default:
@@ -152,6 +161,9 @@ class SearchViewController: UIViewController {
                 let controller = segue.destination as! DetailViewController
                 let result = results[(sender as! IndexPath).row]
                 controller.result = result
+                UIView.animate(withDuration: 0.3, animations: {
+                    controller.isPopUp = true
+                })
             }
             
         }
